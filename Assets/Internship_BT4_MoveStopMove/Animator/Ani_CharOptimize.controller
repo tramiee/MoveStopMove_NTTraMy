@@ -140,18 +140,6 @@ AnimatorController:
   m_Name: Ani_CharOptimize
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: IsDead
-    m_Type: 4
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 0}
-  - m_Name: IsAttack
-    m_Type: 4
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 0}
   - m_Name: IsWin
     m_Type: 4
     m_DefaultFloat: 0
@@ -177,6 +165,18 @@ AnimatorController:
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
   - m_Name: IsIdle
+    m_Type: 9
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 0}
+  - m_Name: IsDead
+    m_Type: 9
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 0}
+  - m_Name: IsAttack
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -265,15 +265,6 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: IsAttack
     m_EventTreshold: 0
-  - m_ConditionMode: 2
-    m_ConditionEvent: IsDead
-    m_EventTreshold: 0
-  - m_ConditionMode: 2
-    m_ConditionEvent: IsWin
-    m_EventTreshold: 0
-  - m_ConditionMode: 2
-    m_ConditionEvent: IsUlti
-    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1102316019244302056}
   m_Solo: 0
@@ -349,15 +340,6 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 2
-    m_ConditionEvent: IsDead
-    m_EventTreshold: 0
-  - m_ConditionMode: 2
-    m_ConditionEvent: IsAttack
-    m_EventTreshold: 0
-  - m_ConditionMode: 2
-    m_ConditionEvent: IsWin
-    m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: IsRun
     m_EventTreshold: 0
@@ -430,18 +412,6 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 2
-    m_ConditionEvent: IsDead
-    m_EventTreshold: 0
-  - m_ConditionMode: 2
-    m_ConditionEvent: IsAttack
-    m_EventTreshold: 0
-  - m_ConditionMode: 2
-    m_ConditionEvent: IsWin
-    m_EventTreshold: 0
-  - m_ConditionMode: 2
-    m_ConditionEvent: IsDance
-    m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: IsIdle
     m_EventTreshold: 0

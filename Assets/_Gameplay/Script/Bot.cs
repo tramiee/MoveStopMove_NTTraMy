@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class Bot : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    public Animator botAnimator;
+    private void OnTriggerEnter(Collider other)
     {
-        
+        if (other.gameObject.CompareTag(Constant.TAG_BULLET))
+        {
+            botAnimator.SetTrigger(Constant.ANIM_ISDEAD);
+        }
     }
 }
