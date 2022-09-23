@@ -8,7 +8,7 @@ public class Bullet : MonoBehaviour
     public Transform player;
     public Vector3 moveVec;
     public float speedBullet;
-
+    public GameObject weaponObj;
     private void Update()
     {
         transform.position += moveVec * speedBullet * Time.deltaTime;
@@ -29,10 +29,15 @@ public class Bullet : MonoBehaviour
         moveVec = bot.position - player.position;
     }
 
+    public void SetWeaponObj(GameObject weapon)
+    {
+        weaponObj = weapon;
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(Constant.TAG_BOT))
         {
+            weaponObj.SetActive(true);
             Destroy(gameObject);
         }
     }

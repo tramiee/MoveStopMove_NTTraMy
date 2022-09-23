@@ -16,6 +16,7 @@ public class Sight : MonoBehaviour
         distanceToCloseBot = 5;
         foreach(Transform currentBot in bots)
         {
+            if (currentBot == null) continue;
             distanceToBot = Vector3.Distance(currentBot.position, player.position);
             if(distanceToBot < distanceToCloseBot)
             {

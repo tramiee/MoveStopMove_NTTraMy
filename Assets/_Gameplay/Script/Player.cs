@@ -16,6 +16,15 @@ public class Player : MonoBehaviour
 
     public Weapon weapon;
 
+    private bool isAttacking;
+    private float countTimeAttack;
+    public float timeAttack;
+
+    private void Start()
+    {
+        isAttacking = false;
+        countTimeAttack = 0;
+    }
     public void Move()
     {
         rb.velocity = new Vector3(joystick.Horizontal * speed, rb.velocity.y, joystick.Vertical * speed);
@@ -24,6 +33,8 @@ public class Player : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(rb.velocity);
             playAnimator.SetTrigger(Constant.ANIM_ISRUN);
             CanThrow = true;
+            isAttacking = false;
+            countTimeAttack = 0;
         }
     }
 
@@ -31,18 +42,32 @@ public class Player : MonoBehaviour
     {
         if(joystick.Horizontal == 0 || joystick.Vertical == 0)
         {
-            playAnimator.SetTrigger(Constant.ANIM_ISIDLE);
-            if (!CanThrow)
+            if (isAttacking)
             {
-                return;
+                countTimeAttack += Time.deltaTime;
+                if (countTimeAttack > timeAttack)
+                {
+                    isAttacking = false;
+                    countTimeAttack = 0;
+                }
             }
+
             Transform closestObj = sight.CheckDistanceClosestBot();
-            if(closestObj != null && weapon != null)
+            if (closestObj != null && weapon != null)
             {
                 playAnimator.SetTrigger(Constant.ANIM_ISATTACK);
-                transform.LookAt(closestObj);
-                weapon.Throw(closestObj, this.transform);
-                CanThrow = false;
+                if (CanThrow)
+                {
+                    transform.LookAt(closestObj);
+                    weapon.Throw(closestObj, this.transform);
+                    CanThrow = false;
+                    isAttacking = true;
+                }
+            }
+            else
+            {
+                if (isAttacking) return;
+                playAnimator.SetTrigger(Constant.ANIM_ISIDLE);
             }
         }
     }
@@ -58,6 +83,7 @@ public class Player : MonoBehaviour
         if (other.gameObject.CompareTag(Constant.TAG_BULLET))
         {
             playAnimator.SetTrigger(Constant.ANIM_ISDEAD);
+            
         }
     }
 }
