@@ -12,4 +12,6 @@ public class Constant : MonoBehaviour
     public const string TAG_BOT = "Bot";
     public const string TAG_PLAYER = "Player";
     public const string TAG_BULLET = "Bullet";
+    public const string TAG_SIGHT = "Sight";
+    public const string TAG_TARGET = "Target";
 }

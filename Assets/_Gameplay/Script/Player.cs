@@ -83,7 +83,6 @@ public class Player : MonoBehaviour
         if (other.gameObject.CompareTag(Constant.TAG_BULLET))
         {
             playAnimator.SetTrigger(Constant.ANIM_ISDEAD);
-            
         }
     }
 }
