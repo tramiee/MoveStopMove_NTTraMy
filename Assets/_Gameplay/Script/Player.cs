@@ -6,9 +6,10 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField] private Rigidbody rb;
-    [SerializeField] private Joystick joystick;
+    [SerializeField] private VariableJoystick variableJoystick;
     [SerializeField] private float speed;
     [SerializeField] private Animator playAnimator;
+    [SerializeField] private LayerMask tableLayer;
 
     public bool CanThrow = true;
 
@@ -16,38 +17,52 @@ public class Player : MonoBehaviour
 
     public Weapon weapon;
 
-    private bool isAttacking;
+    private bool IsAttacking;
     private float countTimeAttack;
     public float timeAttack;
 
     private void Start()
     {
-        isAttacking = false;
+        IsAttacking = false;
         countTimeAttack = 0;
     }
     public void Move()
     {
-        rb.velocity = new Vector3(joystick.Horizontal * speed, rb.velocity.y, joystick.Vertical * speed);
-        if(joystick.Horizontal != 0 || joystick.Vertical != 0)
+        rb.velocity = new Vector3(variableJoystick.Horizontal * speed, rb.velocity.y, variableJoystick.Vertical * speed);
+        if(variableJoystick.Horizontal != 0 || variableJoystick.Vertical != 0)
         {
             transform.rotation = Quaternion.LookRotation(rb.velocity);
             playAnimator.SetTrigger(Constant.ANIM_ISRUN);
             CanThrow = true;
-            isAttacking = false;
+            IsAttacking = false;
             countTimeAttack = 0;
         }
     }
 
+    /*public bool CheckTable()
+    {
+        RaycastHit hit;
+        Physics.Raycast(transform.position, Vector3.down, out hit, 0.5f, tableLayer);
+        if(hit.collider != null)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }*/
+
     public void StopMove()
     {
-        if(joystick.Horizontal == 0 || joystick.Vertical == 0)
+        if(variableJoystick.Horizontal == 0 || variableJoystick.Vertical == 0)
         {
-            if (isAttacking)
+            if (IsAttacking)
             {
                 countTimeAttack += Time.deltaTime;
                 if (countTimeAttack > timeAttack)
                 {
-                    isAttacking = false;
+                    IsAttacking = false;
                     countTimeAttack = 0;
                 }
             }
@@ -61,28 +76,40 @@ public class Player : MonoBehaviour
                     transform.LookAt(closestObj);
                     weapon.Throw(closestObj, this.transform);
                     CanThrow = false;
-                    isAttacking = true;
+                    IsAttacking = true;
                 }
             }
             else
             {
-                if (isAttacking) return;
+                if (IsAttacking) return;
                 playAnimator.SetTrigger(Constant.ANIM_ISIDLE);
             }
         }
     }
 
+    private void Update()
+    {
+        Debug.DrawLine(transform.position, Vector3.down, Color.red, 100);
+    }
     private void FixedUpdate()
     {
+        //Debug.DrawLine(transform.position, transform.position + Vector3.down * 4f, Color.red);
         Move();
         StopMove();
+        //Debug.Log(CheckTable());
+    }
+
+    public void Dead()
+    {
+        playAnimator.SetTrigger(Constant.ANIM_ISDEAD);
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag(Constant.TAG_BULLET))
         {
-            playAnimator.SetTrigger(Constant.ANIM_ISDEAD);
+            Debug.Log("Hit");
+            Dead();
         }
     }
 }

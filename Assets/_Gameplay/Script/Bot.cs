@@ -3,84 +3,77 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+[RequireComponent(typeof(NavMeshAgent))]
 public class Bot : MonoBehaviour
 {
-    public Sight sight;
-    public Weapon weapon;
-    NavMeshAgent agent;
     public Animator botAnimator;
-    public  Vector3 targetPos;
-    public float timer;
-    public float speed;
-    public int newTargetPos;
-    public GameObject sightTarget;
+    public Vector3 targetPos;
+    public Bounds bounds;
+    public GameObject Table;
+    NavMeshAgent agent;
 
-    public bool IsDead;
+    private bool IsRun = false;
+    private bool IsDead;
+    private bool IsSearch;
+
     private void Start()
     {
+        IsRun = false;
         IsDead = false;
+        IsSearch = false;
         agent = gameObject.GetComponent<NavMeshAgent>();
+        bounds = Table.GetComponent<Renderer>().bounds;
     }
+
     private void Update()
     {
-        timer += Time.deltaTime;
-        if (timer > newTargetPos)
+        if (IsRun && !IsDead)
         {
-            
-            MoveTargetRanDom();
-            timer = 0;
+            botAnimator.SetTrigger(Constant.ANIM_ISRUN);
         }
-        else
+
+        // Reach Destination
+        if((agent.hasPath == false || agent.remainingDistance < 1f) && !IsDead)
         {
-            
+            IsRun = false;
             botAnimator.SetTrigger(Constant.ANIM_ISIDLE);
-            //StopMove();
+            if (!IsSearch)
+            {
+                IsSearch = true;
+                Invoke(nameof(MoveTargetRanDom), 5);
+            }
         }
     }
 
     public void MoveTargetRanDom()
     {
-        float myX = gameObject.transform.position.x;
-        float myZ = gameObject.transform.position.z;
-
-        float posX = myX + Random.Range(myX - 20f, myX + 20f);
-        float posZ = myZ + Random.Range(myZ - 20f, myZ + 20f);
-
+        float posX = Random.Range(bounds.min.x, bounds.max.x);
+        float posZ = Random.Range(bounds.min.z, bounds.max.z);
         targetPos = new Vector3(posX, transform.position.y, posZ);
-
         agent.SetDestination(targetPos);
-        botAnimator.SetTrigger(Constant.ANIM_ISRUN);
-    }
-
-    public void StopMove()
-    {
-        Transform closestObj = sight.CheckDistanceClosestBot();
-        if(closestObj != null && weapon != null)
-        {
-            botAnimator.SetTrigger(Constant.ANIM_ISATTACK);
-            transform.LookAt(closestObj);
-            weapon.Throw(closestObj, this.transform);
-        }
+        IsRun = true;
+        IsSearch = false;
     }
 
     public void Death()
     {
         IsDead = true;
+        agent.isStopped = true;
+        botAnimator.SetTrigger(Constant.ANIM_ISDEAD);
         StartCoroutine(DelayDead());
     }
     IEnumerator DelayDead()
     {
-        yield return new WaitForSeconds(2f);
-        botAnimator.SetTrigger(Constant.ANIM_ISDEAD);
+        yield return new WaitForSeconds(4f);
+        Destroy(gameObject);
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag(Constant.TAG_BULLET))
         {
+            Debug.Log("Hit");
             Death();
-            //TO DO
-            Destroy(gameObject);
         }
     }
 }

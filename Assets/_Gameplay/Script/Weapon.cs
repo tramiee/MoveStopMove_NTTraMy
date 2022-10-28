@@ -17,6 +17,7 @@ public class Weapon : MonoBehaviour
         gameObject.SetActive(false);
         //TO DO
         Bullet newBullet = Instantiate(bulletPrefab, bulletPoint.position, bulletPoint.rotation);
+        newBullet.gameObject.SetActive(true);
         newBullet.SetTarget(target);
         newBullet.SetOwner(owner);
         newBullet.SetMovevec();

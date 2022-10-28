@@ -35,7 +35,7 @@ public class Bullet : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag(Constant.TAG_BOT))
+        if (other.CompareTag(Constant.TAG_BOT) || other.CompareTag(Constant.TAG_PLAYER))
         {
             weaponObj.SetActive(true);
             Destroy(gameObject);
